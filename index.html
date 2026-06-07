@@ -1305,7 +1305,7 @@ document.getElementById('cf').addEventListener('submit', async (e) => {
   };
 
   try {
-    const res = await fetch('http://localhost:3000/api/contact', {
+    const res = await fetch('/api/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -1313,41 +1313,26 @@ document.getElementById('cf').addEventListener('submit', async (e) => {
       body: JSON.stringify(data)
     });
 
-    console.log('Status:', res.status);
+    const response = await res.json();
 
-    const text = await res.text();
-    console.log('Raw Response:', text);
-
-    let response;
-
-    try {
-      response = JSON.parse(text);
-    } catch {
-      throw new Error('Server returned invalid JSON');
-    }
-
-    if (res.ok && response.success) {
+    if (response.success) {
       msg.className = 'fm success';
       msg.textContent = '✓ Your message has been sent! We will contact you soon.';
       e.target.reset();
     } else {
-      throw new Error(response.message || 'Server error');
+      msg.className = 'fm error';
+      msg.textContent = '✕ ' + (response.message || 'Something went wrong.');
     }
 
   } catch (err) {
-  console.error('========== EMAIL ERROR ==========');
-  console.error(err);
-  console.error('===============================');
+    console.error(err);
 
-  return res.status(500).json({
-    success: false,
-    message: err.message
-  });
-}
-  finally {
-    btn.textContent = 'Send Enquiry';
-    btn.disabled = false;
+    msg.className = 'fm error';
+    msg.textContent = '✕ Unable to connect. Please try again.';
   }
+
+  btn.textContent = 'Send Enquiry';
+  btn.disabled = false;
 });
 </script>
 </body>
