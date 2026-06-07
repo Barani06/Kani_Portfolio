@@ -85,26 +85,17 @@ function createTransporter() {
 }
 
 /* ─── Contact Route ───────────────────────────────────── */
-/* ─── Contact Route ───────────────────────────────────── */
-app.post('/api/contact', contactLimiter, async (req, res) => {
-
-  console.log('================================');
-  console.log('CONTACT REQUEST RECEIVED');
-  console.log('================================');
-
-  const { name, email, phone, message } = req.body;
-
-  // Validate
-  const errors = validateContactInput({ name, email, phone, message });
-
-  if (errors.length > 0) {
-    console.log('VALIDATION FAILED:', errors);
-
-    return res.status(400).json({
-      success: false,
-      errors
-    });
-  }
+function createTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS
+    }
+  });
+}
 
   // Sanitize
   const safeName    = name.trim().slice(0, 100);
