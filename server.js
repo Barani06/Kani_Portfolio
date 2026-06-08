@@ -27,7 +27,10 @@ app.use(helmet({
       fontSrc: ["'self'", 'fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:', 'https:'],
       scriptSrc: ["'self'", "'unsafe-inline'"],
-      connectSrc: ["'self'"],
+      connectSrc: [
+        "'self'",
+        "https://formspree.io"
+      ],
     },
   },
 }));
