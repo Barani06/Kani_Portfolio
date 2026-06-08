@@ -94,7 +94,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
 
     // Auto reply
     await resend.emails.send({
-      from: 'Digital Rise <onboarding@resend.dev>',
+      from: 'Digital Rise <kanidigitalrisemarketing@gmail.com>',
       to: email,
       subject: 'Thank you for contacting Digital Rise Marketing',
       html: `
