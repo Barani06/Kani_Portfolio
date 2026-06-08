@@ -17,6 +17,7 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 
 const app = express();
+app.set('trust proxy', 1);
 const PORT = process.env.PORT || 3000;
 
 /* ─── Security Middleware ─────────────────────────────── */
@@ -28,10 +29,7 @@ app.use(helmet({
       fontSrc: ["'self'", 'fonts.gstatic.com'],
       imgSrc: ["'self'", 'data:', 'https:'],
       scriptSrc: ["'self'", "'unsafe-inline'"],
-      connectSrc: [
-        "'self'",
-        "https://formspree.io"
-      ],
+      connectSrc: ["'self'"],
     },
   },
 }));
@@ -70,18 +68,7 @@ function validateContactInput({ name, email, phone, message }) {
   return errors;
 }
 
-/* ─── Mailer Setup ────────────────────────────────────── */
-function createTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-}
+
 
 /* ─── Contact Route ───────────────────────────────────── */
 app.post('/api/contact', contactLimiter, async (req, res) => {
