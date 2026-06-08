@@ -1294,45 +1294,42 @@ document.getElementById('cf').addEventListener('submit', async (e) => {
   const btn = e.target.querySelector('button');
   const msg = document.getElementById('fm');
 
-  btn.textContent = 'Sending...';
   btn.disabled = true;
+  btn.textContent = 'Sending...';
 
-  const data = {
-    name: e.target.name.value,
-    email: e.target.email.value,
-    phone: e.target.phone.value,
-    message: e.target.message.value
-  };
+  const formData = new FormData(e.target);
 
   try {
-    const res = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
+    const response = await fetch(
+      'https://formspree.io/f/mbdeoany',
+      {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Accept: 'application/json'
+        }
+      }
+    );
 
-    const response = await res.json();
-
-    if (response.success) {
+    if (response.ok) {
       msg.className = 'fm success';
-      msg.textContent = '✓ Your message has been sent! We will contact you soon.';
+      msg.textContent =
+        '✓ Your message has been sent! We will contact you soon.';
       e.target.reset();
     } else {
       msg.className = 'fm error';
-      msg.textContent = '✕ ' + (response.message || 'Something went wrong.');
+      msg.textContent =
+        '✕ Failed to send message. Please try again.';
     }
 
   } catch (err) {
-    console.error(err);
-
     msg.className = 'fm error';
-    msg.textContent = '✕ Unable to connect. Please try again.';
+    msg.textContent =
+      '✕ Network error. Please try again.';
   }
 
-  btn.textContent = 'Send Enquiry';
   btn.disabled = false;
+  btn.textContent = 'Send Enquiry';
 });
 </script>
 </body>
